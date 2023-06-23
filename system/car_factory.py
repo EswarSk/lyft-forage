@@ -1,35 +1,44 @@
 from datetime import date
-from .car import Car
-from .engine import CapuletEngine, SternmanEngine, WilloughbyEngine
-from .battery import SpindlerBattery, NubbinBattery
+from car import Car
+from engine import CapuletEngine, WilloughbyEngine
+from battery import SpindlerBattery, NubbinBattery
+from tire import CarriganTire, OctoprimeTire, TireType
 
 class CarFactory:
-    @staticmethod
-    def create_calliope(current_date, last_service_date, current_mileage, last_service_mileage):
-        engine = CapuletEngine(last_service_mileage, current_mileage)
+    def create_calliope(self, current_date: date, last_service_date: date, tire_wear: list, tire_type: TireType) -> Car:
+        engine = CapuletEngine(last_service_date, current_date)
         battery = SpindlerBattery(last_service_date, current_date)
-        return Car(engine, battery)
+        tire = self.create_tire(tire_wear, tire_type)
+        return Car(engine, battery, tire)
 
-    @staticmethod
-    def create_glissade(current_date, last_service_date, current_mileage, last_service_mileage):
-        engine = CapuletEngine(last_service_mileage, current_mileage)
+    def create_glissade(self, current_date: date, last_service_date: date, tire_wear: list, tire_type: TireType) -> Car:
+        engine = CapuletEngine(last_service_date, current_date)
+        battery = SpindlerBattery(last_service_date, current_date)
+        tire = self.create_tire(tire_wear, tire_type)
+        return Car(engine, battery, tire)
+
+    def create_palindrome(self, current_date: date, last_service_date: date, tire_wear: list, tire_type: TireType) -> Car:
+        engine = CapuletEngine(last_service_date, current_date)
         battery = NubbinBattery(last_service_date, current_date)
-        return Car(engine, battery)
+        tire = self.create_tire(tire_wear, tire_type)
+        return Car(engine, battery, tire)
 
-    @staticmethod
-    def create_palindrome(current_date, last_service_date, warning_light_on):
-        engine = SternmanEngine(warning_light_on)
-        battery = SpindlerBattery(last_service_date, current_date)
-        return Car(engine, battery)
-
-    @staticmethod
-    def create_rorschach(current_date, last_service_date, current_mileage, last_service_mileage):
-        engine = WilloughbyEngine(last_service_mileage, current_mileage)
-        battery = SpindlerBattery(last_service_date, current_date)
-        return Car(engine, battery)
-
-    @staticmethod
-    def create_thovex(current_date, last_service_date, current_mileage, last_service_mileage):
-        engine = WilloughbyEngine(last_service_mileage, current_mileage)
+    def create_rorschach(self, current_date: date, last_service_date: date, tire_wear: list, tire_type: TireType) -> Car:
+        engine = WilloughbyEngine(last_service_date, current_date)
         battery = NubbinBattery(last_service_date, current_date)
-        return Car(engine, battery)
+        tire = self.create_tire(tire_wear, tire_type)
+        return Car(engine, battery, tire)
+
+    def create_thovex(self, current_date: date, last_service_date: date, tire_wear: list, tire_type: TireType) -> Car:
+        engine = WilloughbyEngine(last_service_date, current_date)
+        battery = NubbinBattery(last_service_date, current_date)
+        tire = self.create_tire(tire_wear, tire_type)
+        return Car(engine, battery, tire)
+
+    def create_tire(self, tire_wear: list, tire_type: TireType):
+        if tire_type == TireType.CARRIGAN:
+            return CarriganTire(tire_wear)
+        elif tire_type == TireType.OCTOPRIME:
+            return OctoprimeTire(tire_wear)
+        else:
+            raise ValueError("Invalid tire type")
